@@ -1,7 +1,7 @@
 motion-arm
 ==========
 
-![](https://badge.imagelayers.io/vimagick/motion-arm:latest.svg)
+![](http://www.lavrsen.dk/foswiki/pub/Motion/WebPreferences/motion-trans.gif)
 
 [Motion][1] is a program that monitors the video signal from one or more cameras
 and is able to detect if a significant part of the picture has changed. Or in
@@ -9,23 +9,24 @@ other words, it can detect motion.
 
 ## docker-compose.yml
 
-```
+```yaml
 motion:
-  image: vimagick/motion-arm
+  image: easypi/motion-arm
   ports:
     - "8080:8080"
     - "8081:8081"
   volumes:
-#   - ./motion.conf:/etc/motion/motion.conf
-    - ./motion:/var/lib/motion
+    - ./motion.conf:/etc/motion/motion.conf
+    - ./data:/var/lib/motion
+    - /etc/localtime:/etc/localtime
   devices:
     - /dev/video0:/dev/video0
   restart: always
 ```
 
-You can edit `/etc/motion/motion.conf` to customize motion.
+You can edit `motion.conf` to customize motion.
 
-```
+```ini
 # set image width
 width 640
 
@@ -45,7 +46,39 @@ ffmpeg_output_movies off
 ffmpeg_timelapse 60
 ```
 
-Please read [this][2] to enable raspberry pi camera module.
+Motion can work with Home-Assistant via [External Commands][2].
+
+``yaml
+binary_sensor:
+  - platform: mqtt
+    name: Motion
+    state_topic: /pi/sensor/motion
+    qos: 0
+    payload_on: ON
+    payload_off: OFF
+    device_class: motion
+```
+
+```bash
+# Command to be executed when a movie file (.mpg|.avi) is created. (default: none)
+# To give the filename as an argument to a command append it with %f
+
+# CURL
+;on_movie_start curl -s -H 'X-HA-Access: ******' -H 'Content-Type: application/json' -d '{"state": "on", "attributes": {"friendly_name": "Motion", "device_class": "motion"}}' http://hass.easypi.pro:8123/api/states/binary_sensor.motion
+# MQTT
+;on_movie_start mosquitto_pub -h mqtt.easypi.pro -u username -P password -r -t /pi/sensor/motion -m ON
+
+# Command to be executed when a movie file (.mpg|.avi) is closed. (default: none)
+# To give the filename as an argument to a command append it with %f
+
+# CURL
+;on_movie_end curl -s -H 'X-HA-Access: ******' -H 'Content-Type: application/json' -d '{"state": "off", "attributes": {"friendly_name": "Motion", "device_class": "motion"}}' http://hass.easypi.pro:8123/api/states/binary_sensor.motion
+# MQTT
+;on_movie_end mosquitto_pub -h mqtt.easypi.pro -u username -P password -r -t /pi/sensor/motion -m OFF
+
+```
+
+Please read [this][3] to enable raspberry pi camera module.
 
 ```
 ####################
@@ -60,4 +93,5 @@ disable_camera_led=1
 ```
 
 [1]: http://lavrsen.dk/foswiki/bin/view/Motion/WebHome
-[2]: https://wiki.archlinux.org/index.php/Raspberry_Pi#Raspberry_Pi_camera_module
+[2]: http://www.lavrsen.dk/foswiki/bin/view/Motion/ExternalCommands
+[3]: https://wiki.archlinux.org/index.php/Raspberry_Pi#Raspberry_Pi_camera_module

@@ -5,7 +5,7 @@
 FROM easypi/alpine-arm
 MAINTAINER EasyPi Software Foundation
 
-ENV GHOST_VER 0.11.8
+ENV GHOST_VER 0.11.9
 ENV GHOST_URL https://github.com/TryGhost/Ghost/releases/download/$GHOST_VER/Ghost-$GHOST_VER.zip
 ENV GHOST_SOURCE /usr/src/ghost
 ENV GHOST_CONTENT /var/lib/ghost
@@ -16,6 +16,7 @@ VOLUME $GHOST_CONTENT
 RUN set -ex \
     && apk add -U bash \
                   nodejs \
+                  nodejs-npm \
     && apk add -t TMP build-base \
                       curl \
                       python \
@@ -32,4 +33,4 @@ COPY docker-entrypoint.sh /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
 
 EXPOSE 2368
-CMD ["npm", "start", "--production"]
+CMD ["npm", "start"]

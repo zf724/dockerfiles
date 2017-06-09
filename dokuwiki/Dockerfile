@@ -3,7 +3,7 @@
 #
 
 FROM alpine
-MAINTAINER kev <noreply@easypi.info>
+MAINTAINER kev <noreply@easypi.pro>
 
 WORKDIR /var/www/html
 
@@ -36,4 +36,4 @@ VOLUME /var/www/html/conf \
 
 EXPOSE 80
 
-CMD php-fpm && nginx -g 'daemon off;'
+CMD php-fpm5 && nginx -g 'daemon off;'

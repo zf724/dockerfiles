@@ -67,6 +67,7 @@ A collection of delicious docker recipes.
 - [x] httpbin :+1:
 - [x] hubot :octocat:
 - [x] influxdb
+- [x] luigi
 - [x] mariadb
 - [x] mariadb-arm
 - [x] monit
@@ -131,6 +132,7 @@ A collection of delicious docker recipes.
 - [x] django-cms
 - [x] dokuwiki :+1:
 - [x] dokuwiki-arm :+1:
+- [x] glances
 - [x] gogs-arm :cn:
 - [x] grafana
 - [x] hugo
@@ -256,6 +258,7 @@ A collection of delicious docker recipes.
     - [ ] node-firefox
     - [x] standalone-firefox
 - [x] tutum/builder
+- [x] wekanteam/wekan
 
 ## auto-completion
 
